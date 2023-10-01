@@ -16,7 +16,7 @@ class Hero(db.Model):
     def __str__(self):
         return self.name
     
-class Hero_Power(db.Model):
+class HeroPower(db.Model):
     __tablename__ = "hero_powers"
 
     id = db.Column(db.Integer, primary_key=True)
