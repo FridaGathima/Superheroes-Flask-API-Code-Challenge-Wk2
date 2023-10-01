@@ -5,7 +5,7 @@ from sqlalchemy_serializer import SerializerMixin
 
 db = SQLAlchemy()
 
-class Hero(db.Model):
+class Hero(db.Model, SerializerMixin):
     __tablename__ = 'heros'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -16,7 +16,7 @@ class Hero(db.Model):
     def __str__(self):
         return self.name
     
-class HeroPower(db.Model):
+class HeroPower(db.Model, SerializerMixin):
     __tablename__ = "hero_powers"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -24,16 +24,16 @@ class HeroPower(db.Model):
     power_id = db.Column(db.Integer, db.ForeignKey("powers.id"))
     hero_id = db.Column(db.Integer, db.ForeignKey("heros.id"))
 
-    # @validates('strength')
-    # def validate_strength(self, key, strength):
-    #     if strength != 'Strong' or strength != 'Weak' or strength != 'Average':
-    #         raise ValueError ('Strength must either be Strong or Weak or Average')
-    #     return strength
+    @validates('strength')
+    def validate_strength(self, key, strength):
+        if strength != 'Strong' or strength != 'Weak' or strength != 'Average':
+            raise ValueError ('Strength must either be Strong or Weak or Average')
+        return strength
 
-    # def __str__(self):
-    #     return self.power_id
+    def __str__(self):
+        return self.power_id
  
-class Power(db.Model):
+class Power(db.Model, SerializerMixin):
     __tablename__ = "powers"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -47,11 +47,11 @@ class Power(db.Model):
     #         raise ValueError("Strength must be Present")
     #     return description
         
-    # @validates('description')
-    # def validate_name(self, key, description):
-    #     if description.length < 20:
-    #         raise ValueError ("Must have a description more than 20 words in length")
-    #     return description
+    @validates('description')
+    def validate_name(self, key, description):
+        if description.length < 20 and description == "":
+            raise ValueError ("Description is required and must have a description of more than 20 characters in length")
+        return description
 
     def __str__(self):
         return self.name
