@@ -26,12 +26,12 @@ class HeroPower(db.Model):
 
     # @validates('strength')
     # def validate_strength(self, key, strength):
-    #     if strength == 'Strong' or strength == 'Weak' or strength == 'Average':
+    #     if strength != 'Strong' or strength != 'Weak' or strength != 'Average':
     #         raise ValueError ('Strength must either be Strong or Weak or Average')
     #     return strength
 
-    def __str__(self):
-        return self.power_id
+    # def __str__(self):
+    #     return self.power_id
  
 class Power(db.Model):
     __tablename__ = "powers"
@@ -41,17 +41,17 @@ class Power(db.Model):
     description = db.Column(db.String, nullable = False)
     heros = db.relationship("Hero", secondary = "hero_powers", back_populates="powers")
 
-    # @validates('name')
-    # def validate_name(self, key, name):
-    #     if not name:
+    # @validates('description')
+    # def validate_description(self, key, description):
+    #     if not description:
     #         raise ValueError("Strength must be Present")
-    #     return name
+    #     return description
         
-    # @validates('name')
-    # def validate_name(self, key, name):
-    #     if name.length < 20:
-    #         raise ValueError ("Must have a description more than 50 words in length")
-    #     return name
+    # @validates('description')
+    # def validate_name(self, key, description):
+    #     if description.length < 20:
+    #         raise ValueError ("Must have a description more than 20 words in length")
+    #     return description
 
     def __str__(self):
         return self.name
