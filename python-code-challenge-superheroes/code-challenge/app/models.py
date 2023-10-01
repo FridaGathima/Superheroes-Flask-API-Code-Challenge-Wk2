@@ -13,7 +13,9 @@ class Hero(db.Model):
     super_name = db.Column(db.String)
     powers = db.relationship("Power", secondary = "hero_powers", back_populates = "heros")
 
-
+    def __str__(self):
+        return self.name
+    
 class Hero_Power(db.Model):
     __tablename__ = "hero_powers"
 
@@ -27,6 +29,9 @@ class Hero_Power(db.Model):
     #     if strength == 'Strong' or strength == 'Weak' or strength == 'Average':
     #         raise ValueError ('Strength must either be Strong or Weak or Average')
     #     return strength
+
+    def __str__(self):
+        return self.power_id
  
 class Power(db.Model):
     __tablename__ = "powers"
@@ -47,6 +52,9 @@ class Power(db.Model):
     #     if name.length < 20:
     #         raise ValueError ("Must have a description more than 50 words in length")
     #     return name
+
+    def __str__(self):
+        return self.name
     
 
 
