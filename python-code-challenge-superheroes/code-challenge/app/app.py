@@ -2,8 +2,10 @@
 
 from flask import Flask, make_response
 from flask_migrate import Migrate
+from flask_sqlalchemy import SQLAlchemy
 
-from models import db, Hero
+
+from models import db
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db/app.db'
@@ -13,9 +15,11 @@ migrate = Migrate(app, db)
 
 db.init_app(app)
 
+
+
 @app.route('/')
 def home():
-    return ''
+    return 'Welcome to My Superheroes API'
 
 
 if __name__ == '__main__':
