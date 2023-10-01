@@ -5,7 +5,7 @@ from models import db, Hero, HeroPower, Power
 from flask_migrate import Migrate
 from flask import request, app, make_response, jsonify
 from flask_sqlalchemy import SQLAlchemy
-from serializer import response_serializer2, response_serializer1
+from serializer import response_serializer2, response_serializer1, response_serializer
 
 
 
@@ -82,8 +82,56 @@ class PowersId(Resource):
         else: 
             
             return (make_response(jsonify({"error": "Hero not found"}), 404 ))
+    
+    def patch(self, id):
+        # power = Power.query.filter_by(id=id).first()
+        # if power:
+        pass
+            
 
 api.add_resource(PowersId, '/powers/<int:id>')
+
+class HeroPowerList(Resource):
+    def get(self):
+        hero_powers = HeroPower.query.all()
+        response = response_serializer(hero_powers)
+        return make_response(jsonify(response), 200)
+    
+    def post(self):
+        try:
+            data = request.get_json()
+            hero_powers = HeroPower(
+                strength = data["strength"],
+                power_id = data["power_id"],
+                hero_id = data["hero_id"]
+            )
+            db.session.add(hero_powers)
+            db.session.commit()
+            hero= Hero.query.filter_by(id=data["hero_id"]).first()
+            powers = [{"id": power.id, "name": power.name, "description": power.description} for power in hero.powers]
+            hero_dict = {
+                "id":hero.id,
+                "name":hero.name,
+                "super_name":hero.super_name,
+                "powers":powers
+            }
+
+            response = make_response(jsonify(hero_dict), 201)
+            return response
+        except ValueError as e:
+            response = make_response(jsonify({"errors": "Validation"}), 404 )
+
+api.add_resource(HeroPowerList, '/hero_powers')
+
+# @app.route('/hero_powerss', method=['POST'])
+# def hero_powers():
+#     if request.method == 'POST':
+#         response_body = {}
+#         response = make_response(
+#             response_body,
+#             201
+#         )
+#         return response
 
 
 if __name__ == '__main__':
