@@ -8,7 +8,6 @@ certifi
 chardet
 click
 colorama
-command-not-found
 cryptography
 cupshelpers
 dbus-python
