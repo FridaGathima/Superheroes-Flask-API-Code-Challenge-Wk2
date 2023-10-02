@@ -23,10 +23,10 @@ api = Api(app)
 # @app.route('/')
 # def home():
 #     return 'Welcome to My Superheroes API'
-parser = reqparse.RequestParser()
-parser.add_argument('strength')
-parser.add_argument('power_id')
-parser.add_argument('hero_id')
+# parser = reqparse.RequestParser()
+# parser.add_argument('strength')
+# parser.add_argument('power_id')
+# parser.add_argument('hero_id')
 
 class Index(Resource):
     def get(self):
@@ -84,10 +84,28 @@ class PowersId(Resource):
             return (make_response(jsonify({"error": "Hero not found"}), 404 ))
     
     def patch(self, id):
-        # power = Power.query.filter_by(id=id).first()
-        # if power:
-        pass
-            
+        try:
+            power = Power.query.filter_by(id=id).first()
+            if power:
+                for attr in request.get_json():
+                    setattr(power, attr, request.get_json()[attr])
+            db.session.add(power)
+            db.session.commit()
+
+            power_dict = {
+                "id":power.id,
+                "name":power.name,
+                "description":power.description,
+            }
+
+            response = make_response(jsonify(power_dict), 200)
+
+            return response
+        except ValueError as e:
+            response = make_response({"errors": e.args}, 200)
+
+            return response 
+
 
 api.add_resource(PowersId, '/powers/<int:id>')
 
@@ -119,7 +137,8 @@ class HeroPowerList(Resource):
             response = make_response(jsonify(hero_dict), 201)
             return response
         except ValueError as e:
-            response = make_response(jsonify({"errors": "Validation"}), 404 )
+            response = make_response(jsonify({"errors": str(e)}), 404 )
+            return response
 
 api.add_resource(HeroPowerList, '/hero_powers')
 
