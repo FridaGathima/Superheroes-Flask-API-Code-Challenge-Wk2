@@ -9,7 +9,6 @@ chardet
 click
 colorama
 cryptography
-cupshelpers
 dbus-python
 decorator
 defer
